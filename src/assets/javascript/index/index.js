@@ -1,21 +1,41 @@
 $(document).ready(() => {
   console.log("ready");
-  var webviewExm1 = $('#webviewExm1')[0];
 
-  webviewSetJs(webviewExm1);
-  // webviewExm1.openDevTools();
+  document.addEventListener("keydown", (e)=>{console.log(e)});
+
+  $('.menu').click((e) => {
+    var name = e.currentTarget.textContent;
+
+    switch(name){
+      case 'Overview':
+        closeAllContent();
+        openContent(name)
+        break;
+      case 'Statistics':
+        closeAllContent();
+        openContent(name);
+        break;
+      case 'Types':
+        closeAllContent();
+        openContent(name);
+        break;
+      default:
+        console.log("hoge");
+        break;
+    }
+  });
 });
 
-function webviewSetJs(ele){
-  ele.addEventListener('dom-ready', () => {
-    $.get(distPath.js('/index/webviewResources/'+ ele.id +'/domReady.js'), (text) => {
-      ele.executeJavaScript(text, false, () => {});
-    });
-  });
+function closeAllContent(){
+  $('.contents').css('display', 'none');
+}
 
-  ele.addEventListener('did-finish-load', () => {
-    $.get(distPath.js('/index/webviewResources/'+ ele.id +'/didFinishLoad.js'), (text) => {
-      ele.executeJavaScript(text, false, () => {});
-    });
+function openContent(n){
+  var elements = $('.contents');
+
+  $.each(elements, (i, v) => {
+    if(v.attributes.name.nodeValue == n){
+      v.style.display = 'block';
+    }
   });
 }

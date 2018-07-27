@@ -1,6 +1,23 @@
 include ../_header.pug
   div.container
-    h1 Electron Template
+    h2 TypeCounter
     hr
-    h2 Webview
-    webview#webviewExm1.nodragmovable(src="http://www.google.com")
+    div.row
+      div#leftSide.col-3
+        ul#menues
+          li.menu Overview
+          li.menu Statistics
+          li.menu Types
+      div#main.col-9
+        ul#statistics.contents(name="Statistics")
+          li Total: 1482 
+          li Most: Space
+          li Least: o
+          li Today: 52
+          li Yesterday: 1043
+            
+        ul#totalTypes.contents(style="display:none" name="Types")
+          li A: 129
+          li B: 111
+          li C: 80
+      

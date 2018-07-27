@@ -1,12 +1,19 @@
+html{
+  height: 100%;
+}
+
 body{
   -webkit-user-select: none;
   -webkit-app-region: drag;
-  background: rgba(122, 122, 122, 0.95);
-  margin-top: 20px;
+  background: rgba(85, 85, 85, 0.95);
   padding: 10px;
+  padding-top: 20px;
+  color: rgb(200, 200, 200);
+  height: 100%;
 }
 
 .container{
+  height: 100%;
   margin: 0;
 }
 
@@ -18,8 +25,41 @@ body{
   -webkit-app-region: no-drag;
 }
 
-#webviewExm1{
-  background: rgb(255, 255, 255);
-  width: 320px;
-  height: 200px;
+.row{
+  height: 70%;
+}
+
+#leftSide{
+  height: 100%;
+  padding: 0;
+  border-right: 1px solid rgb(60, 60, 60);
+}
+
+#menues{
+  overflow: hidden;
+  padding: 0;
+  padding-left: 15px;
+  list-style: none;
+}
+
+#menues li{
+  padding: 10px;
+  margin-left: 0;
+  margin-bottom: 10px;
+}
+
+#menues li:hover{
+  background: rgb(0, 191, 255);
+  cursor: pointer;
+}
+
+#totalTypes{
+  list-style: none;
+  background: rgb(0, 191, 255);
+  border: 1px solid rgba(0, 0, 0, 0);
+  border-radius: 8px;
+}
+
+#statistics{
+  list-style: none;
 }
