@@ -11,13 +11,13 @@
       "dest": "./dist/js"
     },
     {
-      "src": "src/assets/javascript/index/bootstrap/*",
-      "base": "src/assets/javascript/index",
+      "src": "src/assets/javascript/third_party/bootstrap/*",
+      "base": "src/assets/javascript/third_party/",
       "dest": "./dist/js"
     },
     {
-      "src": "src/assets/css/index/bootstrap/*",
-      "base": "src/assets/css/index",
+      "src": "src/assets/css/third_party/bootstrap/*",
+      "base": "src/assets/css/third_party",
       "dest": "./dist/css"
     }
   ],
