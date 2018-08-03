@@ -1,5 +1,6 @@
 html{
   height: 100%;
+  overflow: hidden;
 }
 
 body{
@@ -62,4 +63,10 @@ body{
 
 #statistics{
   list-style: none;
+}
+
+#test{
+  overflow: scroll;
+  width: 600;
+  height: 480;
 }

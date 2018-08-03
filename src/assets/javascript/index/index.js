@@ -1,10 +1,10 @@
 $(document).ready(() => {
   console.log("ready");
 
-  document.addEventListener("keydown", (e)=>{console.log(e)});
-
   $('.menu').click((e) => {
     var name = e.currentTarget.textContent;
+
+    console.log(name);
 
     switch(name){
       case 'Overview':
@@ -24,6 +24,38 @@ $(document).ready(() => {
         break;
     }
   });
+
+  var myChart = echarts.init(document.getElementById('test'));
+  var option = {
+    title: {
+      text: 'ECharts entry example'
+    },
+    tooltip: {},
+    legend: {
+      data:[
+        'Sales',
+        'Tests'
+      ]
+    },
+    xAxis: {
+      data: ["shirt","cardign","chiffon shirt","pants","heels","socks"]
+    },
+    yAxis: {},
+    series: [
+      {
+        name: 'Sales',
+        type: 'bar',
+        data: [5, 20, 36, 10, 10, 20]
+      },
+      {
+          name: 'Tests',
+          type: 'bar',
+          data: [10, 10, 72, 5, 20, 10]
+      }
+    ]
+  };
+
+  myChart.setOption(option);
 });
 
 function closeAllContent(){

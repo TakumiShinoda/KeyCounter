@@ -16,6 +16,11 @@
       "dest": "./dist/js"
     },
     {
+      "src": "src/assets/javascript/third_party/ECharts/*",
+      "base": "src/assets/javascript/third_party/",
+      "dest": "./dist/js"
+    },
+    {
       "src": "src/assets/css/third_party/bootstrap/*",
       "base": "src/assets/css/third_party",
       "dest": "./dist/css"
