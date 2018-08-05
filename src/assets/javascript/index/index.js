@@ -1,5 +1,7 @@
+const ChartOptions = require('./charts.js');
+
 $(document).ready(() => {
-  console.log("ready");
+  var myChart = echarts.init(document.getElementById('test'));
 
   $('.menu').click((e) => {
     var name = e.currentTarget.textContent;
@@ -25,37 +27,7 @@ $(document).ready(() => {
     }
   });
 
-  var myChart = echarts.init(document.getElementById('test'));
-  var option = {
-    title: {
-      text: 'ECharts entry example'
-    },
-    tooltip: {},
-    legend: {
-      data:[
-        'Sales',
-        'Tests'
-      ]
-    },
-    xAxis: {
-      data: ["shirt","cardign","chiffon shirt","pants","heels","socks"]
-    },
-    yAxis: {},
-    series: [
-      {
-        name: 'Sales',
-        type: 'bar',
-        data: [5, 20, 36, 10, 10, 20]
-      },
-      {
-          name: 'Tests',
-          type: 'bar',
-          data: [10, 10, 72, 5, 20, 10]
-      }
-    ]
-  };
-
-  myChart.setOption(option);
+  myChart.setOption(ChartOptions.weekly);
 });
 
 function closeAllContent(){

@@ -1,3 +1,2 @@
-import '../assets/css/index/styles.css';
-import '../assets/javascript/common.js';
-import '../assets/javascript/index/index.js';
+require('../assets/css/index/styles.css');
+require('../assets/javascript/index/index.js');

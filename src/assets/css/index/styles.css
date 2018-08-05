@@ -8,7 +8,7 @@ body{
   -webkit-app-region: drag;
   background: rgba(34, 37, 43, 0.90);
   padding: 0px;
-  padding-top: 20px;
+  padding-top: 25px;
   height: 100%;
 }
 
@@ -72,5 +72,5 @@ body{
 #test{
   overflow: scroll;
   width: 600;
-  height: 480;
+  height: 320;
 }
