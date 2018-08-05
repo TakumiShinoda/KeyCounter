@@ -1,25 +1,28 @@
 const ChartOptions = require('./charts.js');
+const Com = require('../common');
+const Contents = require('./contentsController.js');
 
 $(document).ready(() => {
   var myChart = echarts.init(document.getElementById('test'));
 
-  $('.menu').click((e) => {
-    var name = e.currentTarget.textContent;
+  $('#menues li').click((e) => {
+    var name = e.target.outerText.trim();
 
-    console.log(name);
+    Contents.setBackgroundColor('#menues li');
+    e.currentTarget.style.backgroundColor = 'rgb(0, 191, 255)';
 
     switch(name){
       case 'Overview':
-        closeAllContent();
-        openContent(name)
+        Contents.closeAllContent();
+        Contents.openContent(name);
         break;
       case 'Statistics':
-        closeAllContent();
-        openContent(name);
+        Contents.closeAllContent();
+        Contents.openContent(name);
         break;
       case 'Types':
-        closeAllContent();
-        openContent(name);
+        Contents.closeAllContent();
+        Contents.openContent(name);
         break;
       default:
         console.log("hoge");
@@ -29,17 +32,3 @@ $(document).ready(() => {
 
   myChart.setOption(ChartOptions.weekly);
 });
-
-function closeAllContent(){
-  $('.contents').css('display', 'none');
-}
-
-function openContent(n){
-  var elements = $('.contents');
-
-  $.each(elements, (i, v) => {
-    if(v.attributes.name.nodeValue == n){
-      v.style.display = 'block';
-    }
-  });
-}
