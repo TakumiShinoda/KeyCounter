@@ -6,10 +6,9 @@ html{
 body{
   -webkit-user-select: none;
   -webkit-app-region: drag;
-  background: rgba(85, 85, 85, 0.95);
-  padding: 10px;
+  background: rgba(34, 37, 43, 0.90);
+  padding: 0px;
   padding-top: 20px;
-  color: rgb(200, 200, 200);
   height: 100%;
 }
 
@@ -28,6 +27,13 @@ body{
 
 .row{
   height: 70%;
+
+}
+
+.menu{
+  margin: auto;
+  padding-left: 25px;
+  font-size: 18px;
 }
 
 #leftSide{
@@ -39,14 +45,12 @@ body{
 #menues{
   overflow: hidden;
   padding: 0;
-  padding-left: 15px;
+  padding-left: 0px;
   list-style: none;
 }
 
 #menues li{
-  padding: 10px;
-  margin-left: 0;
-  margin-bottom: 10px;
+  padding: 10px 0;
 }
 
 #menues li:hover{
