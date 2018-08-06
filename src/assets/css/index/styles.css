@@ -9,12 +9,15 @@ body{
   background: rgba(34, 37, 43, 0.90);
   padding: 0px;
   padding-top: 25px;
+  margin-right: 0;
   height: 100%;
 }
 
 .container{
   height: 100%;
-  margin: 0;
+  width: 100%;
+  margin-left: 0px;
+  margin-right: 0px;
 }
 
 .dragmovable{
@@ -35,9 +38,13 @@ body{
   font-size: 18px;
 }
 
+.overviewGraph{
+  margin: auto;
+}
+
 #leftSide{
   height: 100%;
-  padding: 0;
+  padding: 0px;
   border-right: 1px solid rgb(60, 60, 60);
 }
 
@@ -68,8 +75,17 @@ body{
   list-style: none;
 }
 
-#test{
-  overflow: scroll;
-  width: 600;
-  height: 320;
+#overview{
+}
+
+#weekly{
+  overflow: visible;
+  width: 300px;
+  height: 160px;
+}
+
+#daily{
+  overflow: visible;
+  width: 300px;
+  height: 160px;
 }

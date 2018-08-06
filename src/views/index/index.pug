@@ -1,5 +1,5 @@
 include ../_header.pug
-  div.container
+  div.container-fluid
     h2.text-info TypeCounter
     hr
     div.row
@@ -24,5 +24,7 @@ include ../_header.pug
           li B: 111
           li C: 80
           
-        div#test.contents(name="Overview")
-      
+        div#overview.contents(name="Overview")
+          div.row
+            div#daily.overviewGraph.col-6
+            div#weekly.overviewGraph.col-6
