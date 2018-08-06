@@ -1,19 +1,60 @@
 const ChartOptions = require('./charts.js');
-const Com = require('../common');
+const Common = require('../common');
 const Contents = require('./contentsController.js');
 
 $(document).ready(() => {
   let WeeklyGraph = echarts.init(document.getElementById('weekly'));
   let DailyGraph = echarts.init(document.getElementById('daily'));
+  let OverviewForcus = false;
 
   let OverviewGraphs = {
     weekly: {
       graph: WeeklyGraph,
       option: ChartOptions.weekly,
+      onFocus: {
+        size: {
+          width: '600px',
+          height: '320px',
+        },
+        pos: {
+          top: '0px',
+          left: '0px',
+        }
+      },
+      defaults: {
+        size: {
+          width: '48%',
+          height: '50%',
+        },
+        pos: {
+          top: '0px',
+          left: '50%',
+        }
+      },
     },
     daily: {
       graph: DailyGraph,
       option: ChartOptions.daily,
+      onFocus: {
+        size: {
+          width: '600px',
+          height: '320px',
+        },
+        pos: {
+          top: '0px',
+          left: '0px',
+        }
+      },
+      defaults: {
+        size: {
+          width: '300px',
+          height: '160px',
+        },
+        pos: {
+          top: '0px',
+          left: '0px',
+        }
+      },
     }
   }
 
@@ -22,26 +63,48 @@ $(document).ready(() => {
     let targetGraph = OverviewGraphs[graphName];
     let keys = Object.keys(OverviewGraphs);
 
-    for(var i = 0; i < keys.length; i++){
-      if(keys[i] != graphName){
-        $('#' + keys[i]).animate({
-          opacity: 0,
-        }, 500);
-      }
-    }
-
-    $('#' + graphName).removeClass('col-6');
-    $('#' + graphName).removeClass('col-9');
-
-    setTimeout(() => {
+    if(OverviewForcus){
       targetGraph.option.xAxis.show = false;
       targetGraph.option.yAxis.show = false;
 
-      $('#' + graphName).animate({
-        width: "600px",
-        height: "320px"
-      },
-      {
+      $('#' + graphName).animate(targetGraph.defaults.size, {
+        duration: "slow",
+        easing: "swing",
+        step: () => {
+          targetGraph.graph.resize();
+          targetGraph.graph.setOption(targetGraph.option);
+        },
+        complete: () => {
+          targetGraph.graph.resize();
+          targetGraph.graph.setOption(targetGraph.option);
+
+          $('#' + graphName).animate(targetGraph.defaults.pos, 500);
+
+          for(var i = 0; i < keys.length; i++){
+            if(keys[i] != graphName){
+              $('#' + keys[i]).fadeIn("slow");
+            }
+          }
+          targetGraph.option.xAxis.show = true;
+          targetGraph.option.yAxis.show = true;
+          targetGraph.graph.resize();
+          targetGraph.graph.setOption(targetGraph.option);
+          OverviewForcus = false;
+        },
+      });
+    }else{
+      for(var i = 0; i < keys.length; i++){
+        if(keys[i] != graphName){
+          $('#' + keys[i]).fadeOut("slow");
+        }
+      }
+
+      $('#' + graphName).animate(targetGraph.onFocus.pos, 500);
+
+      targetGraph.option.xAxis.show = false;
+      targetGraph.option.yAxis.show = false;
+
+      $('#' + graphName).animate(targetGraph.onFocus.size,{
         duration: "slow",
         easing: "swing",
         step: () => {
@@ -53,9 +116,10 @@ $(document).ready(() => {
           targetGraph.option.yAxis.show = true;
           targetGraph.graph.resize();
           targetGraph.graph.setOption(targetGraph.option);
+          OverviewForcus = true;
         },
       });
-    }, 1000);
+    }
   });
 
   $('#menues li').click((e) => {
