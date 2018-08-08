@@ -1,0 +1,42 @@
+html{
+  width: 100%;
+  height: 100%;
+}
+
+body{
+}
+
+.container{
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+.row{
+  margin: auto;
+  text-align: center;
+}
+
+#main{
+  overflow: hidden;
+  width: 100%;
+  padding: 0;
+  margin: auto;
+}
+
+#message{
+  margin-top: 5%;
+  text-align: center;
+}
+
+#passwdLabel{
+}
+
+#Passwd{
+  margin: auto;
+}
+
+#accept{
+  /* margin-top: 20px; */
+  float: right;
+}

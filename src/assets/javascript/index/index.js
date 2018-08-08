@@ -47,8 +47,8 @@ $(document).ready(() => {
       },
       defaults: {
         size: {
-          width: '300px',
-          height: '160px',
+          width: '48%',
+          height: '50%',
         },
         pos: {
           top: '0px',
