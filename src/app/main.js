@@ -6,6 +6,8 @@ const Storage = require('electron-json-storage');
 const os = require('os');
 
 const Platform = os.platform();
+let CheckPermissionWindow;
+let mainWindow;
 
 const CheckPermissionOption = {
   width: 500,
@@ -21,59 +23,61 @@ const MainWindowOption = {
   movable: true,
   transparent: true,
   titleBarStyle: 'hidden',
-  // frame: false,
+}
+
+function openMainWindow(){
+  mainWindow.show();
+  mainWindow.loadURL('file://' + distPath.views('/index/index.html'));
+  mainWindow.on('closed', () => {
+    mainWindow = null;
+  });
+}
+
+function saveData(data){
+  let post = data.toString();
+  let params = post.split(' ');
+  let now = new Date(parseInt(params[0]) * 1000).toLocaleString();
+  let today = now.split(' ')[0].split('/').join('-');
+  let postData = {epoch: params[0], key: params[1]};
+
+  Storage.get(today, (err, jsonObj) => {
+    if(err) console.log(err);
+    if(Object.keys(jsonObj) == 0){
+      Storage.set(today, {log:[]}, (err) => {
+        if(err) console.log(err);
+      })
+    }else{
+      jsonObj.log.push(postData);
+      Storage.set(today, jsonObj, (err) => {
+        if(err) console.log(err);
+      });
+    }
+  });
 }
 
 app.on('ready', () => {
-  let CheckPermissionWindow = new BrowserWindow(CheckPermissionOption);
-  let mainWindow = new BrowserWindow(MainWindowOption);
+  CheckPermissionWindow = new BrowserWindow(CheckPermissionOption);
+  mainWindow = new BrowserWindow(MainWindowOption);
 
   CheckPermissionWindow.hide();
   mainWindow.hide();
 
   if(Platform == 'darwin'){
-    CheckPermission.show();
+    CheckPermissionWindow.show();
     CheckPermissionWindow.loadURL('file://' + distPath.views('/CheckPermission/index.html'))
     ipc.on('setPasswd', (ev, pass) => {
       KeyObserber.setPasswd(pass);
       KeyObserber.checkPasswd()
         .then(() => {
           console.log("suc");
-          KeyObserber.keyListener((data) => {
-            let post = data.toString();
-            let params = post.split(' ');
-            let now = new Date(parseInt(params[0]) * 1000).toLocaleString();
-            let today = now.split(' ')[0].split('/').join('-');
-            let postData = {epoch: params[0], key: params[1]};
-
-            Storage.get(today, (err, jsonObj) => {
-              if(err) console.log(err);
-
-              console.log(jsonObj);
-              if(Object.keys(jsonObj) == 0){
-                Storage.set(today, {log:[]}, (err) => {
-                  if(err) console.log(err);
-                })
-              }else{
-                jsonObj.log.push(postData);
-                Storage.set(today, jsonObj, (err) => {
-                  if(err) console.log(err);
-                });
-              }
-            })
-
-          }, (err) => {
+          KeyObserber.keyListener(saveData(data), (err) => {
             console.log(err.toString());
             dialog.showErrorBox('Error', 'Cause launch error.');
           });
           CheckPermissionWindow.hide();
         })
         .then(() => {
-          mainWindow.show();
-          mainWindow.loadURL('file://' + distPath.views('/index/index.html'));
-          mainWindow.on('closed', () => {
-            mainWindow = null;
-          });
+          openMainWindow();
         })
         .catch(() => {
           console.log("fail");
@@ -81,10 +85,6 @@ app.on('ready', () => {
         });
     });
   }else if('windows'){
-    mainWindow.show();
-    mainWindow.loadURL('file://' + distPath.views('/index/index.html'));
-    mainWindow.on('closed', () => {
-      mainWindow = null;
-    });
+    openMainWindow();
   }
 });
