@@ -70,17 +70,14 @@ app.on('ready', () => {
       KeyObserber.checkPasswd()
         .then(() => {
           console.log("suc");
-          KeyObserber.keyListener(saveData(data), (err) => {
-            console.log(err.toString());
+          KeyObserber.keyListener(saveData, (err) => {
             dialog.showErrorBox('Error', 'Cause launch error.');
           });
           CheckPermissionWindow.hide();
         })
-        .then(() => {
-          openMainWindow();
-        })
-        .catch(() => {
-          console.log("fail");
+        .then(openMainWindow())
+        .catch((e) => {
+          console.log(e);
           dialog.showErrorBox('Incorrect', 'You need correct Password');
         });
     });
