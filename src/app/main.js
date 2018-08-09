@@ -8,7 +8,7 @@ const CheckPermissionOption = {
   width: 500,
   height: 150,
   title: 'Permission Require',
-  resizable: false
+  resizable: false,
 }
 
 const MainWindowOption = {
@@ -24,7 +24,7 @@ const MainWindowOption = {
 app.on('ready', () => {
   let CheckPermissionWindow = new BrowserWindow(CheckPermissionOption);
 
-  CheckPermissionWindow.loadURL('file://' + distPath.views('/CheckPermission/index.html'));
+  CheckPermissionWindow.loadURL('file://' + distPath.views('/CheckPermission/index.html'))
   ipc.on('setPasswd', (ev, pass) => {
     KeyObserber.setPasswd(pass);
     KeyObserber.checkPasswd()
