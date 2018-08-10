@@ -63,6 +63,11 @@ $(document).ready(() => {
     let weeklyThisArray = [];
     let weeklyLastArray = [];
 
+    let dailyTodayArray = Array(24);
+    let dailyAveArray = [];
+
+    dailyTodayArray.fill(0);
+
     let now = new Date();
     let toDay = now.getDay();
 
@@ -76,9 +81,22 @@ $(document).ready(() => {
       }
     }
 
+    function getDailyData(){
+      let dayData = data[toDay].log;
+
+      for(var i = 0; i < dayData.length; i++){
+        let hour = new Date(parseInt(dayData[i].epoch) * 1000).getHours();
+
+        dailyTodayArray[hour] += 1;
+      }
+    }
+
     getThisWeekData();
+    getDailyData();
+    ChartOptions.daily.series[1].data = dailyTodayArray;
     ChartOptions.weekly.series[1].data = weeklyThisArray;
     OverviewGraphs.weekly.graph.setOption(ChartOptions.weekly);
+    OverviewGraphs.daily.graph.setOption(ChartOptions.daily);
   });
 
   $('.overviewGraph').click((e) => {
