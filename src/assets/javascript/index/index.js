@@ -58,6 +58,29 @@ $(document).ready(() => {
     }
   }
 
+  ipc.on('updateGraphs', (ev, data) => {
+    let weeklyAveArray = [];
+    let weeklyThisArray = [];
+    let weeklyLastArray = [];
+
+    let now = new Date();
+    let toDay = now.getDay();
+
+    function getThisWeekData(){
+      for(var i = 0; i < 7; i++){
+        if(Object.keys(data[i]) == 0){
+          weeklyThisArray[i] = 0;
+        }else{
+          weeklyThisArray[i] = data[i].log.length;
+        }
+      }
+    }
+
+    getThisWeekData();
+    ChartOptions.weekly.series[1].data = weeklyThisArray;
+    OverviewGraphs.weekly.graph.setOption(ChartOptions.weekly);
+  });
+
   $('.overviewGraph').click((e) => {
     let graphName = e.currentTarget.id;
     let targetGraph = OverviewGraphs[graphName];

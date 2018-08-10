@@ -43,7 +43,7 @@ function saveData(data){
   Storage.get(today, (err, jsonObj) => {
     if(err) console.log(err);
     if(Object.keys(jsonObj) == 0){
-      Storage.set(today, {log:[]}, (err) => {
+      Storage.set(today, {log:[postData]}, (err) => {
         if(err) console.log(err);
       })
     }else{
@@ -55,6 +55,85 @@ function saveData(data){
   });
 }
 
+function getStorageFromDay(day, pre, callback){
+  let result = [];
+  let weeklyEpoch = [];
+  let promises = [];
+  let now = new Date();
+  let toDay = now.getDay();
+  let getStorage = (targetDay) => {
+    return new Promise((res, rej) => {
+      Storage.get(targetDay, (err, data) => {
+        if(!err){
+          res(data);
+        }else{
+          res({});
+        }
+      })
+    });
+  }
+
+  for(var i = 0; i < 7; i++){
+    weeklyEpoch[i] = (day + (86400 * (-toDay + i))) * 1000
+  }
+
+  for(var i = 0; i < pre; i++){
+    let targetDayStr = new Date(weeklyEpoch[i]).toLocaleString();
+    let targetDay = targetDayStr.split(' ')[0].split('/').join('-');
+
+    promises.push(getStorage(targetDay));
+  }
+
+  Promise.all(promises)
+    .then((results) => {
+      callback(results);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+}
+
+function mainProc(data){
+  let post = data.toString();
+  let params = post.split(' ');
+
+  saveData(data);
+  getStorageFromDay(parseInt(params[0]), 7, (results) => {
+    mainWindow.webContents.send('updateGraphs', results);
+  });
+}
+
+ipc.on('setPasswd', (ev, pass) => {
+  KeyObserber.setPasswd(pass);
+  KeyObserber.checkPasswd()
+    .then(() => {
+      console.log("suc");
+      KeyObserber.keyListener(mainProc, (err) => {
+        dialog.showErrorBox('Error', 'Cause launch error.');
+      });
+      CheckPermissionWindow.hide();
+    })
+    .then(openMainWindow())
+    .catch((e) => {
+      console.log(e);
+      dialog.showErrorBox('Incorrect', 'You need correct Password');
+    });
+});
+
+ipc.on('requireRecord', (ev, name, proc) => {
+  let result;
+
+  Storage.get('', (err, data) => {
+    if(err) console.log(err);
+    if(Object.keys(data) == 0){
+      result = {};
+    }else{
+      result = data;
+    }
+    ev.sender.send(proc, result);
+  });
+});
+
 app.on('ready', () => {
   CheckPermissionWindow = new BrowserWindow(CheckPermissionOption);
   mainWindow = new BrowserWindow(MainWindowOption);
@@ -65,22 +144,6 @@ app.on('ready', () => {
   if(Platform == 'darwin'){
     CheckPermissionWindow.show();
     CheckPermissionWindow.loadURL('file://' + distPath.views('/CheckPermission/index.html'))
-    ipc.on('setPasswd', (ev, pass) => {
-      KeyObserber.setPasswd(pass);
-      KeyObserber.checkPasswd()
-        .then(() => {
-          console.log("suc");
-          KeyObserber.keyListener(saveData, (err) => {
-            dialog.showErrorBox('Error', 'Cause launch error.');
-          });
-          CheckPermissionWindow.hide();
-        })
-        .then(openMainWindow())
-        .catch((e) => {
-          console.log(e);
-          dialog.showErrorBox('Incorrect', 'You need correct Password');
-        });
-    });
   }else if('windows'){
     openMainWindow();
   }

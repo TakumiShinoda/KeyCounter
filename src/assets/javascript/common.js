@@ -1,4 +1,7 @@
-$(document).ready(() => {
-  console.log('jQuery loaded');
-  console.log("common loaded");
-});
+function row2daily(data, today){
+
+}
+
+function row2weekly(data, today){
+  
+}
