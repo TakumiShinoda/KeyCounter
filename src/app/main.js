@@ -10,7 +10,7 @@ let CheckPermissionWindow;
 let mainWindow;
 let DataBuffer = [];
 let DataBufferAlt = [];
-let DataBufferFreq = 10;
+let DataBufferFreq = 5;
 
 const CheckPermissionOption = {
   width: 500,
@@ -101,6 +101,7 @@ function mainProc(data){
   let params = post.split(' ');
 
   DataBuffer.push(data);
+
   if(DataBuffer.length > DataBufferFreq){
     DataBufferAlt =  DataBuffer;
     DataBuffer = [];
@@ -109,11 +110,13 @@ function mainProc(data){
       saveData(DataBufferAlt[i]);
     }
   }
+}
 
-  getStorageFromDay(parseInt(params[0]), 7, (results) => {
+ipc.on('getStorageWeek', (ev, date) => {
+  getStorageFromDay(date, 7, (results) => {
     mainWindow.webContents.send('updateGraphs', results);
   });
-}
+});
 
 ipc.on('setPasswd', (ev, pass) => {
   KeyObserber.setPasswd(pass);

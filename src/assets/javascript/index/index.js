@@ -190,4 +190,10 @@ $(document).ready(() => {
 
   WeeklyGraph.setOption(ChartOptions.weekly);
   DailyGraph.setOption(ChartOptions.daily);
+
+  setInterval(() => {
+    let date = new Date();
+    let time = date.getTime();
+    ipc.send('getStorageWeek', Math.floor(time / 1000));
+  }, 5000);
 });
