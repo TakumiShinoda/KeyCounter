@@ -8,6 +8,9 @@ const os = require('os');
 const Platform = os.platform();
 let CheckPermissionWindow;
 let mainWindow;
+let DataBuffer = [];
+let DataBufferAlt = [];
+let DataBufferFreq = 10;
 
 const CheckPermissionOption = {
   width: 500,
@@ -97,7 +100,16 @@ function mainProc(data){
   let post = data.toString();
   let params = post.split(' ');
 
-  saveData(data);
+  DataBuffer.push(data);
+  if(DataBuffer.length > DataBufferFreq){
+    DataBufferAlt =  DataBuffer;
+    DataBuffer = [];
+    for(var i = 0; i < DataBufferAlt.length; i++){
+      console.log(DataBufferAlt[i]);
+      saveData(DataBufferAlt[i]);
+    }
+  }
+
   getStorageFromDay(parseInt(params[0]), 7, (results) => {
     mainWindow.webContents.send('updateGraphs', results);
   });
