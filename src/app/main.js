@@ -126,6 +126,10 @@ function mainProc(data){
   if(DataBuffer.length > DataBufferFreq) flushBuff();
 }
 
+ipc.on('flushBuff', (ev) => {
+  flushBuff();
+});
+
 ipc.on('getStorageWeek', (ev, date) => {
   getStorageFromDay(date, 7, (results) => {
     mainWindow.webContents.send('updateGraphs', results);
@@ -142,9 +146,11 @@ ipc.on('setPasswd', (ev, pass) => {
       });
       CheckPermissionWindow.hide();
     })
-    .then(openMainWindow())
-    .catch((e) => {
-      console.log(e);
+    .then(() => {
+      return openMainWindow()
+    })
+    .catch((err) => {
+      console.log(err.toString());
       dialog.showErrorBox('Incorrect', 'You need correct Password');
     });
 });
