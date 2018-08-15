@@ -26,6 +26,7 @@
     "electron-json-storage": "^4.1.1",
     "gulp-cli": "^2.0.1",
     "jquery": "^3.3.1",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "tree-kill": "^1.2.0"
   }
 }
