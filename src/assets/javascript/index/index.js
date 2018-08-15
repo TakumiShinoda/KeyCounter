@@ -2,6 +2,11 @@ const ChartOptions = require('./charts.js');
 const Common = require('../common');
 const Contents = require('./contentsController.js');
 
+let WeeklyGraph;
+let DailyGraph;
+let OverviewForcus;
+let OverviewGraphs;
+
 function updateGraphs(){
   let date = new Date();
   let time = date.getTime();
@@ -11,11 +16,10 @@ function updateGraphs(){
 }
 
 $(document).ready(() => {
-  let WeeklyGraph = echarts.init(document.getElementById('weekly'));
-  let DailyGraph = echarts.init(document.getElementById('daily'));
-  let OverviewForcus = false;
-
-  let OverviewGraphs = {
+  WeeklyGraph = echarts.init(document.getElementById('weekly'));
+  DailyGraph = echarts.init(document.getElementById('daily'));
+  OverviewForcus = false;
+  OverviewGraphs = {
     weekly: {
       graph: WeeklyGraph,
       option: ChartOptions.weekly,
@@ -66,49 +70,17 @@ $(document).ready(() => {
     }
   }
 
+  setDomEvents();
+  setIpcEvents();
   updateGraphs();
 
-  ipc.on('updateGraphs', (ev, data) => {
-    let weeklyAveArray = [];
-    let weeklyThisArray = [];
-    let weeklyLastArray = [];
+  WeeklyGraph.setOption(ChartOptions.weekly);
+  DailyGraph.setOption(ChartOptions.daily);
 
-    let dailyTodayArray = Array(24);
-    let dailyAveArray = [];
+  setInterval(() => {updateGraphs()}, 5000);
+});
 
-    dailyTodayArray.fill(0);
-
-    let now = new Date();
-    let toDay = now.getDay();
-
-    function getThisWeekData(){
-      for(var i = 0; i < 7; i++){
-        if(Object.keys(data[i]) == 0){
-          weeklyThisArray[i] = 0;
-        }else{
-          weeklyThisArray[i] = data[i].log.length;
-        }
-      }
-    }
-
-    function getDailyData(){
-      let dayData = data[toDay].log;
-
-      for(var i = 0; i < dayData.length; i++){
-        let hour = new Date(parseInt(dayData[i].epoch) * 1000).getHours();
-
-        dailyTodayArray[hour] += 1;
-      }
-    }
-
-    getThisWeekData();
-    getDailyData();
-    ChartOptions.daily.series[1].data = dailyTodayArray;
-    ChartOptions.weekly.series[1].data = weeklyThisArray;
-    OverviewGraphs.weekly.graph.setOption(ChartOptions.weekly);
-    OverviewGraphs.daily.graph.setOption(ChartOptions.daily);
-  });
-
+function setDomEvents(){
   $('.overviewGraph').click((e) => {
     let graphName = e.currentTarget.id;
     let targetGraph = OverviewGraphs[graphName];
@@ -197,9 +169,47 @@ $(document).ready(() => {
         break;
     }
   });
+}
 
-  WeeklyGraph.setOption(ChartOptions.weekly);
-  DailyGraph.setOption(ChartOptions.daily);
+function setIpcEvents(){
+  ipc.on('updateGraphs', (ev, data) => {
+    let weeklyAveArray = [];
+    let weeklyThisArray = [];
+    let weeklyLastArray = [];
 
-  setInterval(() => {updateGraphs()}, 5000);
-});
+    let dailyTodayArray = Array(24);
+    let dailyAveArray = [];
+
+    dailyTodayArray.fill(0);
+
+    let now = new Date();
+    let toDay = now.getDay();
+
+    function getThisWeekData(){
+      for(var i = 0; i < 7; i++){
+        if(Object.keys(data[i]) == 0){
+          weeklyThisArray[i] = 0;
+        }else{
+          weeklyThisArray[i] = data[i].log.length;
+        }
+      }
+    }
+
+    function getDailyData(){
+      let dayData = data[toDay].log;
+
+      for(var i = 0; i < dayData.length; i++){
+        let hour = new Date(parseInt(dayData[i].epoch) * 1000).getHours();
+
+        dailyTodayArray[hour] += 1;
+      }
+    }
+
+    getThisWeekData();
+    getDailyData();
+    ChartOptions.daily.series[1].data = dailyTodayArray;
+    ChartOptions.weekly.series[1].data = weeklyThisArray;
+    OverviewGraphs.weekly.graph.setOption(ChartOptions.weekly);
+    OverviewGraphs.daily.graph.setOption(ChartOptions.daily);
+  });
+}
