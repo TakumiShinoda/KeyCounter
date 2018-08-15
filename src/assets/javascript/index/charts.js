@@ -1,14 +1,14 @@
 module.exports = {
   weekly: {
     color : [
-      'rgba(20,255,212,1)',
       'rgba(20, 155, 212, 1)',
+      'rgba(0, 51,255,1)',
       'rgba(255, 20, 181, 1)'
     ],
     textStyle: {
       color: 'rgba(255, 255, 255, 1)',
     },
-    backgroundColor: 'rgba(34, 37, 43, 0)',
+    backgroundColor: 'rgba(51, 255, 51, 0.4)',
     title: {
       text: 'Weekly Types',
       textStyle: {
@@ -29,13 +29,14 @@ module.exports = {
       textStyle: {
         color: 'rgba(255, 255, 255, 1)',
       },
+      show: false,
     },
     xAxis: {
       show: true,
       data: ["Sun.", "Mon.", "Tue.", "Wed.", "Thurs.", "Fri.", "Sat."],
     },
     yAxis: {
-      show: true,
+      show: false,
     },
     series: [
       {
@@ -58,13 +59,13 @@ module.exports = {
   daily: {
     color : [
       'rgba(20,255,212,1)',
-      'rgba(20, 155, 212, 1)',
+      'rgba(0, 51,255,1)',
       'rgba(255, 20, 181, 1)'
     ],
     textStyle: {
       color: 'rgba(255, 255, 255, 1)',
     },
-    backgroundColor: 'rgba(34, 37, 43, 0)',
+    backgroundColor: 'rgba(0, 255, 255, 0.4)',
     title: {
       text: 'Daily Types',
       textStyle: {
@@ -85,13 +86,14 @@ module.exports = {
       textStyle: {
         color: 'rgba(255, 255, 255, 1)',
       },
+      show: false,
     },
     xAxis: {
       show: true,
       data: ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23"],
     },
     yAxis: {
-      show: true,
+      show: false,
     },
     series: [
       {
@@ -102,7 +104,7 @@ module.exports = {
       {
         name: 'This',
         type: 'line',
-        data: [10, 10, 72, 5, 20, 10, 5, 20, 36, 10, 10, 20, 5, 20, 36, 10, 10, 20, 5, 20, 36, 10, 10, 20,],
+        data: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       },
     ],
   }

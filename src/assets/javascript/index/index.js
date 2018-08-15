@@ -86,9 +86,10 @@ function setDomEvents(){
     let targetGraph = OverviewGraphs[graphName];
     let keys = Object.keys(OverviewGraphs);
 
-    if(OverviewForcus){
+    function fadeOut(){
       targetGraph.option.xAxis.show = false;
       targetGraph.option.yAxis.show = false;
+      targetGraph.option.legend.show = false;
 
       $('#' + graphName).animate(targetGraph.defaults.size, {
         duration: "slow",
@@ -109,13 +110,14 @@ function setDomEvents(){
             }
           }
           targetGraph.option.xAxis.show = true;
-          targetGraph.option.yAxis.show = true;
           targetGraph.graph.resize();
           targetGraph.graph.setOption(targetGraph.option);
           OverviewForcus = false;
         },
       });
-    }else{
+    }
+
+    function fadeIn(){
       for(var i = 0; i < keys.length; i++){
         if(keys[i] != graphName){
           $('#' + keys[i]).fadeOut("slow");
@@ -137,11 +139,18 @@ function setDomEvents(){
         complete: () => {
           targetGraph.option.xAxis.show = true;
           targetGraph.option.yAxis.show = true;
+          targetGraph.option.legend.show = true;
           targetGraph.graph.resize();
           targetGraph.graph.setOption(targetGraph.option);
           OverviewForcus = true;
         },
       });
+    }
+
+    if(OverviewForcus){
+      fadeOut();
+    }else{
+      fadeIn();
     }
   });
 
