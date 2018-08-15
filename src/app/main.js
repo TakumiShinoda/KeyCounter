@@ -109,23 +109,21 @@ function keyCode2keyChar(code){
   return res;
 }
 
-function mainProc(data){
-  let post = data.toString();
-  let params = post.split(' ');
+function flushBuff(){
+  DataBufferAlt =  DataBuffer;
+  DataBuffer = [];
+  for(var i = 0; i < DataBufferAlt.length; i++){
+    let keyCode = DataBufferAlt[i].split(' ')[1]
+    let keyChar = keyCode2keyChar(keyCode);
 
-  DataBuffer.push(data);
-
-  if(DataBuffer.length > DataBufferFreq){
-    DataBufferAlt =  DataBuffer;
-    DataBuffer = [];
-    for(var i = 0; i < DataBufferAlt.length; i++){
-      let keyCode = DataBufferAlt[i].split(' ')[1]
-      let keyChar = keyCode2keyChar(keyCode);
-
-      console.log(keyChar);
-      saveData(DataBufferAlt[i]);
-    }
+    console.log(keyChar);
+    saveData(DataBufferAlt[i]);
   }
+}
+
+function mainProc(data){
+  DataBuffer.push(data.toString());
+  if(DataBuffer.length > DataBufferFreq) flushBuff();
 }
 
 ipc.on('getStorageWeek', (ev, date) => {
