@@ -39,15 +39,15 @@ std::string getCharFromJson(std::string file, std::string key){
 
 CGEventRef on_tap(CGEventTapProxy proxy, CGEventType type, CGEventRef event, void *refcon){
   CGKeyCode key = CGEventGetIntegerValueField(event, kCGKeyboardEventKeycode);
-  std::string keyFromJson = getCharFromJson("src/app/module/keyLayouts.json", std::to_string(key)); // module/keyLayouts.json
+  // std::string keyFromJson = getCharFromJson("src/app/module/keyLayouts.json", std::to_string(key)); // module/keyLayouts.json
   time_t now;
   time(&now);
 
-  if(keyFromJson.empty()){
-    keyFromJson = "<unknown>";
-  }
+  // if(keyFromJson.empty()){
+  //   keyFromJson = "<unknown>";
+  // }
 
-  std::cout << now << " " << keyFromJson << " json" <<std::endl;
+  std::cout << now << " " << key << " json" <<std::endl;
 
   fflush(stdout);
   return event;

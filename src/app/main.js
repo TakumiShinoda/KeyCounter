@@ -4,6 +4,7 @@ const ipc = require('electron').ipcMain;
 const KeyObserber = require('./module/KeyObserber');
 const Storage = require('electron-json-storage');
 const os = require('os');
+const KeyLayouts = require('./module/keyLayouts.json');
 
 const Platform = os.platform();
 let CheckPermissionWindow;
@@ -96,6 +97,18 @@ function getStorageFromDay(day, pre, callback){
     })
 }
 
+function keyCode2keyChar(code){
+  let res = '';
+
+  if(Platform == 'darwin'){
+    res =  KeyLayouts[code][1];
+  }else if(Platform == 'win32'){
+    res = KeyLayouts[code][0];
+  }
+  if(res == undefined || res == "") res = '<unknown>';
+  return res;
+}
+
 function mainProc(data){
   let post = data.toString();
   let params = post.split(' ');
@@ -106,7 +119,10 @@ function mainProc(data){
     DataBufferAlt =  DataBuffer;
     DataBuffer = [];
     for(var i = 0; i < DataBufferAlt.length; i++){
-      console.log(DataBufferAlt[i]);
+      let keyCode = DataBufferAlt[i].split(' ')[1]
+      let keyChar = keyCode2keyChar(keyCode);
+
+      console.log(keyChar);
       saveData(DataBufferAlt[i]);
     }
   }
