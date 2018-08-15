@@ -2,6 +2,14 @@ const ChartOptions = require('./charts.js');
 const Common = require('../common');
 const Contents = require('./contentsController.js');
 
+function updateGraphs(){
+  let date = new Date();
+  let time = date.getTime();
+
+  ipc.send('flushBuff');
+  ipc.send('getStorageWeek', Math.floor(time / 1000));
+}
+
 $(document).ready(() => {
   let WeeklyGraph = echarts.init(document.getElementById('weekly'));
   let DailyGraph = echarts.init(document.getElementById('daily'));
@@ -57,6 +65,8 @@ $(document).ready(() => {
       },
     }
   }
+
+  updateGraphs();
 
   ipc.on('updateGraphs', (ev, data) => {
     let weeklyAveArray = [];
@@ -191,9 +201,5 @@ $(document).ready(() => {
   WeeklyGraph.setOption(ChartOptions.weekly);
   DailyGraph.setOption(ChartOptions.daily);
 
-  setInterval(() => {
-    let date = new Date();
-    let time = date.getTime();
-    ipc.send('getStorageWeek', Math.floor(time / 1000));
-  }, 5000);
+  setInterval(() => {updateGraphs()}, 5000);
 });
