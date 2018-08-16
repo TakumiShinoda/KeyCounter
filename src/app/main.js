@@ -126,6 +126,60 @@ function mainProc(data){
   if(DataBuffer.length > DataBufferFreq) flushBuff();
 }
 
+ipc.on('getAllData', (ev) => {
+  let dataList = [];
+  let promiseList = [];
+
+  const getData = (key) => {
+    return new Promise((res) => {
+      Storage.get(key, (err, data) => {
+        if(data == undefined || data == {}) res();
+        dataList.push({key: key, data: data});
+        res();
+      });
+    })
+  }
+
+  const getAllKeys = () => {
+    return new Promise((res, rej) => {
+      Storage.keys((err, keys) => {
+        if(err) rej('Failed to get All Keys');
+        for(var i = 0; i < keys.length; i++){
+          if(keys[i].indexOf('lock') >= 0){
+            keys.splice(i, 1);
+          }
+        }
+        res(keys);
+      });
+    });
+  }
+
+  const setPromise = (keys) => {
+    return new Promise((res) => {
+      for(var i = 0; i < keys.length; i++){
+        promiseList.push(getData(keys[i]));
+      }
+      res();
+    })
+  }
+
+  getAllKeys()
+    .then((keys) => {
+      return setPromise(keys);
+    })
+    .then(() => {
+      return Promise.all(promiseList);
+    })
+    .then(() => {
+      console.log('dataList:', dataList);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+
+  // ev.sender.send();
+});
+
 ipc.on('flushBuff', (ev) => {
   flushBuff();
 });

@@ -70,6 +70,8 @@ $(document).ready(() => {
     }
   }
 
+  ipc.send('getAllData');
+
   setDomEvents();
   setIpcEvents();
   updateGraphs();
