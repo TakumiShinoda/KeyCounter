@@ -70,7 +70,15 @@ $(document).ready(() => {
     }
   }
 
-  ipc.send('getAllData');
+  ipcSendPromised('getAllData')
+    .then((resp) => {
+      let twoWeekData = [];
+      console.log(resp.param);
+
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 
   setDomEvents();
   setIpcEvents();
@@ -81,6 +89,23 @@ $(document).ready(() => {
 
   setInterval(() => {updateGraphs()}, 5000);
 });
+
+function ipcSendPromised(key, param = {}, timeout = 3000){
+  return new Promise((res, rej) => {
+    let timer = setTimeout(() => {
+      rej('Timeout');
+    }, timeout);
+
+    ipc.on(key + '_recv', (ev, param) => {
+      clearTimeout(timer);
+      ipc.removeListener(key + '_recv', () => {
+
+      });
+      res({event: ev, param: param});
+    });
+    ipc.send(key, param);
+  })
+}
 
 function setDomEvents(){
   $('.overviewGraph').click((e) => {

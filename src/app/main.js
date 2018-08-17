@@ -11,7 +11,7 @@ let CheckPermissionWindow;
 let mainWindow;
 let DataBuffer = [];
 let DataBufferAlt = [];
-let DataBufferFreq = 5;
+let DataBufferFreq = 20;
 
 const CheckPermissionOption = {
   width: 500,
@@ -171,13 +171,11 @@ ipc.on('getAllData', (ev) => {
       return Promise.all(promiseList);
     })
     .then(() => {
-      console.log('dataList:', dataList);
+      ev.sender.send('getAllData_recv', dataList);
     })
     .catch((err) => {
       console.log(err);
     })
-
-  // ev.sender.send();
 });
 
 ipc.on('flushBuff', (ev) => {
