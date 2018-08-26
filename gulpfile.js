@@ -3,6 +3,7 @@ const pug = require('gulp-pug');
 const electron = require('electron-connect').server.create();
 const webpack = require('webpack');
 const webpackStream = require('webpack-stream');
+const plumber = require('gulp-plumber');
 const webpackConfig = require('./dev/webpack.config.js');
 const async = require('async');
 const {copyChain, routes} = require('./dev/gulpChain.json');
@@ -10,10 +11,13 @@ const {distPath, srcPath} = require('./dev/path');
 
 gulp.task('make_bundle', () => {
   return new Promise((res, rej) => {
-    routes.forEach((r) => {
-      webpackStream(webpackConfig.config(r), webpack)
-      .pipe(gulp.dest('./dist/bundles'));
-    });
+    for(var i = 0; i < routes.length; i++){
+      webpackStream(webpackConfig.config(routes[i]), webpack)
+        .on('error', (e) => {
+          plumber();
+        })
+        .pipe(gulp.dest('./dist/bundles'));
+    }
     res();
   })
 });
@@ -21,6 +25,7 @@ gulp.task('make_bundle', () => {
 gulp.task('pug_compile', () => {
   return new Promise((res, rej) => {
     gulp.src(['./src/**/*.pug', '!./pug/**/_*.pug'])
+      .pipe(plumber())
       .pipe(pug({
         pretty: true
       }))
@@ -52,6 +57,7 @@ gulp.task('main', () => {
 
     setTimeout(() => {
       electron.start();
+      res();
     }, 1000);
   })
 });
