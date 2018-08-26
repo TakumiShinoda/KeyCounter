@@ -71,10 +71,50 @@ $(document).ready(() => {
   }
 
   ipcSendPromised('getAllData')
-    .then((resp) => {
-      let twoWeekData = [];
-      console.log(resp.param);
+    .then((resp) => { // sort all-data by date
+      const allData = resp.param;
+      const now = new Date();
+      const todate = now.getFullYear() + '-' +  (now.getMonth() + 1).toString() + '-' + now.getDate();
+      let allDateData = [];
+      let sortDateData = [];
+      let arrangeDataArr = [];
 
+      for(var i = 0; i < allData.length; i++){
+        allDateData.push(Common.dateStr2Num(allData[i].key));
+      }
+      sortDateData = allDateData.sort().reverse();
+      for(var i = 0; i < sortDateData.length; i++){
+        for(var j = 0; j < allData.length; j++){
+          if(Common.dateStr2Num(allData[j].key) == sortDateData[i]){
+            arrangeDataArr.push(allData[j]);
+            break;
+          }
+        }
+      }
+      return arrangeDataArr;
+    })
+    .then((data) => { // get low data from arranged all-data (if no data of one day, it is empty)
+      console.log(data);
+
+      let adjustData = [];
+      let dataKeysMap = [];
+      let todate = Common.getTodate('-');
+
+      if(data[0].key != todate) data.unshift({key: todate, data: {log: []}});
+      for(var i = 0; i < data.length; i++) dataKeysMap.push(data[i].key);
+      for(var i = 0; i < data.length; i++){
+        let convertDateKey = todate.replace(/-/g, '/');
+        let dateKeyObj = new Date(convertDateKey);
+        let calcDateObj = new Date(dateKeyObj.getFullYear(), dateKeyObj.getMonth(), dateKeyObj.getDate() - i);
+        let calcDateKeyStr = calcDateObj.getFullYear() + '-' + (calcDateObj.getMonth() + 1) + '-' + calcDateObj.getDate();
+        let mapPos = dataKeysMap.indexOf(calcDateKeyStr);
+
+        mapPos >= 0 ? adjustData[i] = data[i].data : adjustData[i] = {log: []};
+      }
+      return adjustData;
+    })
+    .then((data) => {
+      console.log(data);
     })
     .catch((err) => {
       console.log(err);
