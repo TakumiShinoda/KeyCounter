@@ -16,6 +16,13 @@ function updateGraphs(){
   ipc.send('getStorageWeek', Math.floor(time / 1000));
 }
 
+function updateOverviewGraphs(hoursTypes, weekTypes){
+  ChartOptions.daily.series[1].data = hoursTypes;
+  ChartOptions.weekly.series[1].data = weekTypes;
+  OverviewGraphs.daily.graph.setOption(ChartOptions.daily);
+  OverviewGraphs.weekly.graph.setOption(ChartOptions.weekly);
+}
+
 $(document).ready(() => {
   WeeklyGraph = echarts.init(document.getElementById('weekly'));
   DailyGraph = echarts.init(document.getElementById('daily'));
@@ -72,13 +79,22 @@ $(document).ready(() => {
   }
 
   ipcSendPromised('getAllData')
-    .then((resp) => DataAttach.arrangeAllData(resp)) // sort all-data by date
-    .then((data) => DataAttach.arrangedData2Raw(data)) // get low data from arranged all-data (if no data of one day, it is empty
+    .then((resp) => DataAttach.arrangeAllData(resp))
+    .then((data) => DataAttach.arrangedData2Raw(data))
     .then((data) => {
-      console.log(data);
+      let dataAlt = data;
+      let today = (new Date).getDay();
+      let hoursTypes;
+      let weekTypes;
+      let dayData = data[0].log;
+      let weekData = dataAlt.slice(0, 4).reverse();
+
+      hoursTypes = DataAttach.getHoursTypes(dayData);
+      weekTypes = DataAttach.getWeekTypes(weekData);
+      updateOverviewGraphs(hoursTypes, weekTypes);
     })
     .catch((err) => {
-      console.log(err);
+      alert(err);
     });
 
   setDomEvents();
@@ -244,9 +260,9 @@ function setIpcEvents(){
 
     getThisWeekData();
     getDailyData();
-    ChartOptions.daily.series[1].data = dailyTodayArray;
-    ChartOptions.weekly.series[1].data = weeklyThisArray;
-    OverviewGraphs.weekly.graph.setOption(ChartOptions.weekly);
-    OverviewGraphs.daily.graph.setOption(ChartOptions.daily);
+    // ChartOptions.daily.series[1].data = dailyTodayArray;
+    // ChartOptions.weekly.series[1].data = weeklyThisArray;
+    // OverviewGraphs.weekly.graph.setOption(ChartOptions.weekly);
+    // OverviewGraphs.daily.graph.setOption(ChartOptions.daily);
   });
 }

@@ -13,5 +13,13 @@ module.exports = {
     let result = now.getFullYear() + splitter + (now.getMonth() + 1) + splitter + now.getDate();
 
     return result;
+  },
+  getDateDiff: (date1Str, date2Str) => {
+    let date1 = new Date(date1Str.replace(/-/g, '/'));
+    let date2 = new Date(date2Str.replace(/-/g, '/'));
+    let msDiff = date1 - date2;
+    let diff = Math.floor(msDiff / (1000 * 60 * 60 *24))
+
+    return ++diff;
   }
 }

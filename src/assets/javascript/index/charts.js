@@ -42,17 +42,17 @@ module.exports = {
       {
         name: 'Ave',
         type: 'line',
-        data: [5, 20, 36, 10, 10, 20, 10],
+        data: [0, 0, 0, 0, 0, 0, 0],
       },
       {
         name: 'This',
         type: 'line',
-        data: [10, 10, 72, 5, 20, 10, 5],
+        data: [0, 0, 0, 0, 0, 0, 0],
       },
       {
         name: 'Last',
         type: 'line',
-        data: [30, 2, 50, 20, 10, 25, 25],
+        data: [0, 0, 0, 0, 0, 0, 0],
       },
     ],
   },
